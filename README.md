@@ -1,6 +1,6 @@
-# Bateria Absurda — Na marcação
+# Bateria Absurda — Central de ensaio
 
-Organizador editável para planejar a apresentação da bateria, com verde musgo, preto e fundo branco.
+Organizador editável para planejar a apresentação da bateria, com a identidade visual da bateria: verde vibrante, preto, tipografia pesada e faixas com textura de papel rasgado. As áreas de edição mantêm fundo branco.
 
 ## Recursos
 
@@ -40,10 +40,12 @@ Também é possível servir a pasta com qualquer servidor estático.
 | Arquivo | Conteúdo |
 | --- | --- |
 | `index.html` | Estrutura e textos da interface |
-| `style.css` | Cores, layout e aparência responsiva |
+| `style.css` | Layout e aparência responsiva de base |
+| `brand.css` | Identidade visual da Bateria Absurda |
+| `paper.svg` | Textura vetorial das faixas de papel |
 | `app.js` | Sequência, formação, editores e armazenamento |
 
-Para mudar as cores, edite a paleta em `style.css`. Para mudar o planejamento padrão de novos navegadores, edite o objeto `initial` em `app.js`.
+Para mudar as cores, edite a paleta em `brand.css`. Para mudar o planejamento padrão de novos navegadores, edite o objeto `initial` em `app.js`.
 
 ## Salvamento e cópias
 
@@ -55,7 +57,7 @@ As fontes do Google Fonts usam internet; sem conexão, o site utiliza as fontes 
 
 ## Publicação
 
-Os três arquivos podem ser hospedados diretamente em qualquer serviço para sites estáticos. Não há servidor de aplicação, banco de dados ou variáveis secretas.
+Os arquivos HTML, CSS, JavaScript e SVG podem ser hospedados diretamente em qualquer serviço para sites estáticos. Não há servidor de aplicação, banco de dados ou variáveis secretas.
 
 Versão hospedada atual: https://bateria-roteiro-joao.jonesfogo.chatgpt.site
 

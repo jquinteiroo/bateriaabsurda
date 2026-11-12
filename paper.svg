@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="650" height="300" viewBox="0 0 650 300">
+ <defs>
+  <filter id="paper"><feTurbulence type="fractalNoise" baseFrequency=".025 .045" numOctaves="3" seed="12"/><feDiffuseLighting lighting-color="#ffffff" surfaceScale="4"><feDistantLight azimuth="50" elevation="45"/></feDiffuseLighting><feBlend in="SourceGraphic" mode="multiply"/></filter>
+  <linearGradient id="green" x2="1" y2="1"><stop stop-color="#72e34c"/><stop offset="1" stop-color="#58c83d"/></linearGradient>
+ </defs>
+ <path fill="url(#green)" d="M0 0h650v300H0z"/>
+ <g fill="#2d9a23" opacity=".13"><path d="M0 0l97 150L13 300 180 200 208 0zM330 0l-77 130 103 170 19-161L500 0zM610 0L470 130l140 170-65-165z"/><path d="M0 90l300-50 350 65-340-35zM0 250l140-70 250 55 260-75-250 110-269-60z"/></g>
+ <path fill="#62d447" opacity=".32" filter="url(#paper)" d="M0 0h650v300H0z"/>
+</svg>
