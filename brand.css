@@ -85,6 +85,9 @@ h2 { font: 800 28px/1 'Barlow Condensed',Impact,sans-serif; letter-spacing: -.4p
 .stage-back { color: #637659; }
 .person { border-radius: 3px; background: #eafaE3; color: #1d5011; border: 1px solid #5c9e47; box-shadow: 2px 2px 0 #111; font-weight: 800; }
 .person small { color: #4a693e; }
+.person { width: 17%; min-width: 0; max-width: 140px; }
+.person small { line-height: 1.3; }
+@media(max-width:760px) { .person { max-width: none; padding: 8px 4px; font-size: 10px; } .person small { font-size: 8px; } }
 .library-card { border-radius: 3px; border-top: 4px solid var(--black); }
 .library-card:hover { border-color: var(--green-dark); }
 .library-card b { font: 800 26px 'Barlow Condensed',Impact,sans-serif; }

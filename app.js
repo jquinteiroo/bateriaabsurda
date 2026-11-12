@@ -1,7 +1,45 @@
 const $=s=>document.querySelector(s),uid=()=>crypto.randomUUID(),key='na-marcacao-v1';
-const initial={version:1,target:7,notes:'',library:[['C','Começo'],['A','Azão'],['M','Mosquito'],['42','42'],['86','86'],['2','2'],['PR','PR'],['SR','SR'],['FIM','Fim']].map(([code,name])=>({id:code,code,name,notes:''})),sequence:['C','SR','2','SR','42','SR','M','SR','42','SR','86','A','PR','SR','A','FIM'].map(code=>({id:uid(),ref:code,seconds:0,notes:''})),people:[['Bru','2º',30,12],['LG','3º',50,12],['Bree','1º',70,12],['B','',32,27],['J','',50,27],['G ou T','',68,27],['J','',41,40],['S','',59,40],['L','',28,53],['G','',47,53],['M','',67,53],['I','',32,65],['L','',50,65],['A','',68,65],['LA','',23,78],['LT','',36,78],['I','',49,78],['A','',62,78],['G','',75,78],['EU','',49,91]].map(([name,notes,x,y])=>({id:uid(),name,notes,x,y}))};
+const formationRoster=[
+  ['bru','Bru','Surdo de Primeira',30,12],
+  ['lg','LG','Surdo de Terceira',50,12],
+  ['bre','Bre','Surdo de Primeira',70,12],
+  ['beck','Beck','Caixa',32,27],
+  ['julia','Julia','Caixa',50,27],
+  ['g-ou-t','G ou T','Caixa',68,27],
+  ['joao-ripa','João','Ripa',41,40],
+  ['sofia','Sofia','Ripa',59,40],
+  ['lara','Lara','Tamborim',28,53],
+  ['gabriel','Gabriel','Tamborim',47,53],
+  ['malu','Malu','Tamborim',67,53],
+  ['isadora','Isadora','Agogô',32,65],
+  ['ligia','Lígia','Chocalho',50,65],
+  ['artur','Artur','Chocalho',68,65],
+  ['joao-mestre','João','Mestre/Apito',49,91]
+];
+const initial={version:1,formationRevision:1,target:7,notes:'',library:[['C','Começo'],['A','Azão'],['M','Mosquito'],['42','42'],['86','86'],['2','2'],['PR','PR'],['SR','SR'],['FIM','Fim']].map(([code,name])=>({id:code,code,name,notes:''})),sequence:['C','SR','2','SR','42','SR','M','SR','42','SR','86','A','PR','SR','A','FIM'].map(code=>({id:uid(),ref:code,seconds:0,notes:''})),people:formationRoster.map(([slot,name,notes,x,y])=>({id:uid(),slot,name,notes,x,y}))};
+// Atualiza a formação transcrita da foto sem alterar roteiro, IDs ou posições.
+function migrateFormation(s){
+  if(s.formationRevision>=1)return false;
+  const oldNames=['Bru','LG','Bree','B','J','G ou T','J','S','L','G','M','I','L','A','LA','LT','I','A','G','EU'];
+  const isLegacy=s.people.length>=20&&oldNames.filter((name,i)=>s.people[i].name===name).length>=16;
+  if(isLegacy){
+    const removeRow=['LA','LT','I','A','G'].every((name,i)=>s.people[14+i].name===name);
+    const oldSurdoNotes=['2º','3º','1º'];
+    s.people=s.people.flatMap((person,i)=>{
+      if(removeRow&&i>=14&&i<=18)return [];
+      const rosterIndex=i===19?14:i<14?i:-1;
+      if(rosterIndex<0)return [person];
+      const [slot,name,instrument]=formationRoster[rosterIndex];
+      if(person.name!==oldNames[i])return [person];
+      const extra=person.notes.trim();
+      return [{...person,slot,name,notes:extra&&extra!==oldSurdoNotes[i]&&extra!==instrument?instrument+' · '+extra:instrument}];
+    });
+  }
+  s.formationRevision=1;
+  return true;
+}
 let state=structuredClone(initial),active='roteiro',editing=null,dragId=null;
-try{const saved=JSON.parse(localStorage.getItem(key));if(valid(saved))state=saved}catch{}
+try{const saved=JSON.parse(localStorage.getItem(key));if(valid(saved)){state=saved;if(migrateFormation(state))localStorage.setItem(key,JSON.stringify(state))}}catch{}
 function valid(s){return s&&s.version===1&&Number.isFinite(s.target)&&s.target>0&&typeof s.notes==='string'&&Array.isArray(s.library)&&s.library.length>0&&s.library.every(x=>x&&typeof x.id==='string'&&typeof x.code==='string'&&typeof x.name==='string'&&typeof x.notes==='string')&&new Set(s.library.map(x=>x.id)).size===s.library.length&&Array.isArray(s.sequence)&&s.sequence.every(x=>x&&typeof x.id==='string'&&s.library.some(l=>l.id===x.ref)&&Number.isFinite(x.seconds)&&x.seconds>=0&&typeof x.notes==='string')&&new Set(s.sequence.map(x=>x.id)).size===s.sequence.length&&Array.isArray(s.people)&&s.people.every(x=>x&&typeof x.id==='string'&&typeof x.name==='string'&&typeof x.notes==='string'&&Number.isFinite(x.x)&&x.x>=5&&x.x<=95&&Number.isFinite(x.y)&&x.y>=8&&x.y<=92)}
 function esc(v){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function save(){try{localStorage.setItem(key,JSON.stringify(state));$('#save-state').textContent='● Salvo neste navegador'}catch{$('#save-state').textContent='⚠ Exporte para guardar suas alterações'}stats()}
@@ -20,4 +58,4 @@ $('#timeline').ondragstart=e=>{dragId=e.target.closest('.block')?.dataset.id;e.d
 document.querySelectorAll('.close').forEach(b=>b.onclick=()=>$('#editor').close());$('#editor-form').onsubmit=e=>{e.preventDefault();const f=Object.fromEntries(new FormData(e.target)),{kind,id}=editing;const list=state[kind==='segment'?'sequence':kind==='person'?'people':'library'];let item=list.find(x=>x.id===id);if(kind==='break'&&state.library.some(x=>x.id!==id&&x.code.toLowerCase()===f.code.trim().toLowerCase())){toast('Esta sigla já existe na biblioteca.');return}let values=kind==='segment'?{ref:f.ref,seconds:Number(f.seconds),notes:f.notes}:kind==='person'?{name:f.name.trim(),notes:f.notes}:{code:f.code.trim(),name:f.name.trim(),notes:f.notes};if(kind!=='segment'&&(!values.name||(kind==='break'&&!values.code))){toast('Preencha os campos com um nome ou sigla.');return}if(item)Object.assign(item,values);else list.push({id:uid(),...(kind==='person'?{x:50,y:50}:{}),...values});save();render();$('#editor').close();toast('Alterações salvas')};
 $('#delete').onclick=()=>{const{kind,id}=editing;if(kind==='break'&&state.sequence.some(x=>x.ref===id)){toast('Remova os trechos que usam este breque antes de excluí-lo.');return}const name=kind==='segment'?'sequence':kind==='person'?'people':'library';if(name==='library'&&state.library.length===1){toast('Mantenha ao menos um breque na biblioteca.');return}state[name]=state[name].filter(x=>x.id!==id);save();render();$('#editor').close();toast('Item excluído')};
 let moving=null;$('#stage').onpointerdown=e=>{const el=e.target.closest('.person');if(!el)return;const p=state.people.find(x=>x.id===el.dataset.id);moving={el,p,startX:e.clientX,startY:e.clientY,x:p.x,y:p.y,moved:false};el.setPointerCapture(e.pointerId)};$('#stage').onpointermove=e=>{if(!moving)return;const m=moving,r=$('#stage').getBoundingClientRect(),dx=e.clientX-m.startX,dy=e.clientY-m.startY;if(Math.abs(dx)+Math.abs(dy)>6)m.moved=true;if(!m.moved)return;m.p.x=Math.max(7,Math.min(93,m.x+dx/r.width*100));m.p.y=Math.max(8,Math.min(92,m.y+dy/r.height*100));m.el.style.left=m.p.x+'%';m.el.style.top=m.p.y+'%'};$('#stage').onpointerup=()=>{if(!moving)return;const m=moving;moving=null;if(m.moved)save();else openEditor('person',m.p.id)};$('#stage').onpointercancel=()=>{if(moving)save();moving=null};$('#stage').onkeydown=e=>{const el=e.target.closest('.person');if(!el)return;const p=state.people.find(x=>x.id===el.dataset.id);if(e.key==='Enter'||e.key===' '){e.preventDefault();openEditor('person',p.id)}else if(e.key.startsWith('Arrow')){e.preventDefault();p.x=Math.max(7,Math.min(93,p.x+(e.key==='ArrowRight'?2:e.key==='ArrowLeft'?-2:0)));p.y=Math.max(8,Math.min(92,p.y+(e.key==='ArrowDown'?2:e.key==='ArrowUp'?-2:0)));el.style.left=p.x+'%';el.style.top=p.y+'%';save()}};
-$('#notes').oninput=e=>{state.notes=e.target.value;save()};$('#target').onchange=e=>{const n=Number(e.target.value);if(n>0&&n<=180){state.target=n;save()}else e.target.value=state.target};$('#export').onclick=()=>{const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}),a=document.createElement('a'),url=URL.createObjectURL(blob);a.href=url;a.download='bateria-absurda-'+new Date().toISOString().slice(0,10)+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('Roteiro exportado com formação e legendas')};$('#import').onclick=()=>$('#file').click();$('#file').onchange=async e=>{try{const file=e.target.files[0];if(!file)return;const s=JSON.parse(await file.text());if(!valid(s))throw Error();if(!confirm('Substituir o planejamento atual pelo roteiro deste arquivo? Exporte o atual antes, se quiser guardar uma cópia.'))return;state=s;save();render();toast('Roteiro importado')}catch{toast('Arquivo inválido. Use um roteiro exportado pelo site.')}finally{e.target.value=''}};$('#print').onclick=()=>window.print();render();
+$('#notes').oninput=e=>{state.notes=e.target.value;save()};$('#target').onchange=e=>{const n=Number(e.target.value);if(n>0&&n<=180){state.target=n;save()}else e.target.value=state.target};$('#export').onclick=()=>{const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}),a=document.createElement('a'),url=URL.createObjectURL(blob);a.href=url;a.download='bateria-absurda-'+new Date().toISOString().slice(0,10)+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('Roteiro exportado com formação e legendas')};$('#import').onclick=()=>$('#file').click();$('#file').onchange=async e=>{try{const file=e.target.files[0];if(!file)return;const s=JSON.parse(await file.text());if(!valid(s))throw Error();if(!confirm('Substituir o planejamento atual pelo roteiro deste arquivo? Exporte o atual antes, se quiser guardar uma cópia.'))return;migrateFormation(s);state=s;save();render();toast('Roteiro importado')}catch{toast('Arquivo inválido. Use um roteiro exportado pelo site.')}finally{e.target.value=''}};$('#print').onclick=()=>window.print();render();
