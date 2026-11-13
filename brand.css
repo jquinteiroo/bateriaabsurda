@@ -16,10 +16,9 @@ body { background: white; }
 main { padding-left: 38px; padding-right: 38px; }
 header { height: 75px; border-bottom: 0; }
 .sidebar { background: var(--black); padding-top: 32px; border-right: 1px solid #252525; }
-.brand { color: white; display: block; }
-.brand-name { display: inline-block; font: 900 42px/.86 'Barlow Condensed', Impact, sans-serif; letter-spacing: -1.2px; position: relative; }
-.brand-name small { display: block; font: 700 13px/1.3 'DM Sans', sans-serif; letter-spacing: 6px; margin-bottom: 5px; }
-.brand-dot { position: absolute; font: 12px 'DM Sans',sans-serif; right: -13px; top: 22px; padding: 0; color: var(--green); }
+.brand { color: white; display: block; width: fit-content; max-width: 100%; margin-inline: auto; }
+.brand-logo { display: block; width: 164px; max-width: 100%; height: auto; border-radius: 6px; }
+@media(max-width:760px) { .brand { margin-inline: 0; } .brand-logo { width: 76px; } }
 .side-label { color: #9c9c9c; margin-top: 45px; font-size: 9px; letter-spacing: 1.5px; }
 .nav { color: #b7b7b7; border-radius: 3px; min-height: 45px; }
 .nav.active { background: var(--green); color: var(--black); font-weight: 700; }
