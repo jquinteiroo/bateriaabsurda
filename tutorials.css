@@ -1,0 +1,44 @@
+/* Área de estudo: a mesma identidade do roteiro e da formação. */
+.tutorial-filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 25px 0 12px; }
+.tutorial-filters button { background: white; border: 1px solid #bbc1b5; border-radius: 3px; color: #3c4536; padding: 10px 13px; font-size: 11px; }
+.tutorial-filters button[aria-pressed="true"] { background: var(--black); border-color: var(--black); color: var(--green); font-weight: 700; }
+.tutorial-count { font-size: 11px; margin-bottom: 18px; }
+.tutorial-groups { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+.tutorial-group { display: flex; flex-direction: column; min-width: 0; border: 1px solid var(--line); border-top: 4px solid var(--black); padding: 21px; }
+.tutorial-group-heading .eyebrow { font-size: 8px; letter-spacing: 1px; }
+.tutorial-group h3 { font: 800 28px/1 'Barlow Condensed', Impact, sans-serif; margin: 9px 0 18px; }
+.tutorial-lessons { padding: 0; list-style: none; margin: 0 0 20px; }
+.tutorial-lessons li { position: relative; border-top: 1px solid var(--line); padding: 14px 0 0; margin-bottom: 10px; }
+.tutorial-lesson { display: flex; align-items: flex-start; gap: 12px; color: var(--ink); text-decoration: none; }
+.tutorial-lesson:hover b { text-decoration: underline; }
+.tutorial-play { display: grid; place-items: center; flex: 0 0 38px; height: 38px; background: var(--green); font-size: 14px; }
+.tutorial-lesson small { display: block; font-size: 8px; color: #5e6955; line-height: 1.5; letter-spacing: .5px; }
+.tutorial-lesson b { display: block; font-size: 13px; line-height: 1.5; margin-top: 4px; overflow-wrap: anywhere; }
+.tutorial-watch { display: block; font-size: 11px; color: var(--green-dark); margin-top: 7px; }
+.tutorial-edit { display: block; margin: 8px 0 0 50px; background: none; color: #60655b; font-size: 11px; padding: 4px 0; text-decoration: underline; }
+.tutorial-empty { font-size: 12px; margin-bottom: 24px; }
+.tutorial-group-actions { margin-top: auto; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; padding-top: 15px; border-top: 1px solid var(--line); }
+.tutorial-group-actions a, .tutorial-group-actions button { background: none; font-size: 11px; color: var(--green-dark); font-weight: 700; text-decoration: none; padding: 5px 0; }
+.tutorial-group-actions a:hover, .tutorial-group-actions button:hover { text-decoration: underline; }
+.tutorial-form-hint { font-size: 12px; }
+.tutorial-fields label { display: block; font-size: 11px; margin: 15px 0 6px; color: #56634b; }
+.tutorial-fields input, .tutorial-fields select { display: block; width: 100%; background: white; color: var(--ink); border: 1px solid #bbc1b5; border-radius: 3px; padding: 11px; }
+.tutorial-fields p { font-size: 10px; margin-top: 6px; }
+@media (max-width: 1150px) {
+  .workspace-head { flex-wrap: wrap; }
+}
+@media (max-width: 760px) {
+  .tutorial-groups { grid-template-columns: 1fr; gap: 15px; }
+  .tutorial-filters { gap: 7px; }
+  .tutorial-filters button { font-size: 11px; padding: 10px; }
+  .workspace-head { align-items: flex-start; }
+  .workspace-head .tabs { flex-wrap: wrap; gap: 0 17px; width: 100%; }
+  .workspace-head .tabs button { padding: 12px 0; }
+  .workspace-head .tabs button.active::after { bottom: 0; height: 3px; }
+  .workspace-head > .primary { margin-top: 4px; }
+}
+@media print {
+  .tutorial-filters, .tutorial-group-actions, .tutorial-edit { display: none; }
+  .tutorial-group { break-inside: avoid; }
+  .tutorial-groups { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
