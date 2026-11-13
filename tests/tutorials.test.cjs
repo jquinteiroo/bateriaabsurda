@@ -231,6 +231,37 @@ test('peça bloqueada impede edição e exclusão e permite consultar instruçõ
   assert.match(html, /id="notes" readonly/);
 });
 
+test('vídeo da apresentação é exibido na tela inicial da peça com controles', () => {
+  const { run, nodes } = load();
+  assert.ok(html.includes('id="piece-video"'));
+  assert.ok(html.includes('assets/apresentacao.mp4'));
+  assert.ok(html.includes('assets/Apresentaçao.mp4'));
+  assert.ok(html.includes('08:20'));
+
+  const video = nodes['piece-video'];
+  video.currentTime = 50;
+  video.duration = 500;
+  video.paused = false;
+  let played = false;
+  let paused = false;
+  video.play = () => { played = true; video.paused = false; };
+  video.pause = () => { paused = true; video.paused = true; };
+
+  nodes['video-rewind'].onclick();
+  assert.equal(video.currentTime, 40);
+
+  nodes['video-forward'].onclick();
+  assert.equal(video.currentTime, 50);
+
+  nodes['video-restart'].onclick();
+  assert.equal(video.currentTime, 0);
+  assert.equal(played, true);
+
+  video.paused = false;
+  run(`changeTab('formacao')`);
+  assert.equal(paused, true);
+});
+
 test('importação preserva peça e referências mesmo com uma biblioteca diferente', () => {
   const { run } = load();
   const original = JSON.parse(run('JSON.stringify(state)'));

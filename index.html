@@ -3,7 +3,41 @@
 <body><aside class="sidebar"><a class="brand" href="#" aria-label="Bateria Absurda - início"><img class="brand-logo" src="assets/logo-bateria-absurda.png?v=0cfe902f9b" alt="Bateria Absurda AUPP" width="1280" height="1280" decoding="async"></a><nav><button class="nav active" data-tab="roteiro" aria-label="Peça">▤ <span>Peça</span></button><button class="nav" data-tab="formacao">▦ <span>Formação da bateria</span></button><button class="nav" data-tab="breques">♫ <span>Biblioteca de breques</span></button><button class="nav" data-tab="tutoriais">▶ <span>Tutoriais dos instrumentos</span></button></nav><div class="side-bottom"><span class="avatar">BA</span><div>Bateria Absurda<small>Peça</small></div></div></aside>
 <main><header><div><span class="eyebrow">ABSURDA / CENTRAL DE ENSAIO</span><span class="save-state" id="save-state">● Salvo neste navegador</span></div><div class="top-actions"><button class="quiet" id="import">Importar</button><button class="quiet" id="export">↗ Exportar peça</button><button class="quiet" id="print">⎙ Imprimir</button></div></header><section class="intro"><h1 id="page-title">Peça</h1></section>
 <div class="workspace-head"><div class="tabs"><button class="active" data-tab="roteiro" aria-label="Peça">Peça</button><button data-tab="formacao">Formação</button><button data-tab="breques">Breques & legendas</button><button data-tab="tutoriais">Tutoriais</button></div></div>
-<section id="roteiro" class="view" aria-label="Peça"><div class="section-heading"><div><h2>Peça</h2></div></div><div class="sequence-strip"><h3>Sequência da peça</h3><ol id="piece-sequence" class="piece-sequence" tabindex="0" aria-label="Sequência completa da peça"></ol></div><div class="timeline" id="timeline"></div><div class="notes"><label for="notes">Caderno de ensaio <span>IDEIAS, ENTRADAS E COMBINADOS</span></label><textarea id="notes" readonly placeholder="Nenhuma anotação cadastrada."></textarea></div></section>
+<section id="roteiro" class="view" aria-label="Peça">
+  <div class="section-heading">
+    <div>
+      <h2>Peça</h2>
+      <p>Consulte a apresentação completa, a sequência dos breques e as anotações do ensaio.</p>
+    </div>
+  </div>
+  <div class="piece-video-card" aria-label="Vídeo da apresentação">
+    <div class="piece-video-header">
+      <div>
+        <span class="eyebrow green">VÍDEO DA PEÇA</span>
+        <h3>Apresentação da bateria</h3>
+      </div>
+      <div class="piece-video-badge" title="Duração da apresentação">08:20</div>
+    </div>
+    <div class="piece-video-wrapper">
+      <video id="piece-video" controls preload="metadata" playsinline>
+        <source src="assets/apresentacao.mp4" type="video/mp4">
+        <source src="assets/Apresenta%C3%A7ao.mp4" type="video/mp4">
+        <source src="assets/Apresentaçao.mp4" type="video/mp4">
+        <source src="../Apresenta%C3%A7ao.mp4" type="video/mp4">
+        <source src="../Apresentaçao.mp4" type="video/mp4">
+        <p>Seu navegador não suporta a reprodução deste vídeo. Você pode <a href="assets/apresentacao.mp4" download>baixar o vídeo da apresentação (MP4)</a>.</p>
+      </video>
+    </div>
+    <div class="piece-video-footer">
+      <p class="piece-video-note">Gravação em vídeo da apresentação da Bateria Absurda com a sequência de passagens e breques.</p>
+      <div class="piece-video-actions">
+        <button type="button" class="quiet" id="video-rewind" aria-label="Voltar 10 segundos">↺ -10s</button>
+        <button type="button" class="quiet" id="video-restart" aria-label="Voltar ao início">⏮ Início</button>
+        <button type="button" class="quiet" id="video-forward" aria-label="Avançar 10 segundos">↻ +10s</button>
+      </div>
+    </div>
+  </div>
+  <div class="sequence-strip"><h3>Sequência da peça</h3><ol id="piece-sequence" class="piece-sequence" tabindex="0" aria-label="Sequência completa da peça"></ol></div><div class="timeline" id="timeline"></div><div class="notes"><label for="notes">Caderno de ensaio <span>IDEIAS, ENTRADAS E COMBINADOS</span></label><textarea id="notes" readonly placeholder="Nenhuma anotação cadastrada."></textarea></div></section>
 <section id="formacao" class="view" hidden>
   <div class="section-heading"><div><h2>Formação</h2><p>Arraste as caixinhas para ajustar as posições. Clique para editar nome e observação.</p></div><div class="formation-picker"><label for="formation-layout">Formação</label><select id="formation-layout"><option value="circulo">Em círculo</option><option value="palco">Palco</option></select></div></div>
   <div class="formation-carousel" id="formation-carousel" aria-label="Formações da bateria">

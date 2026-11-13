@@ -117,6 +117,17 @@ function changeTab(tab){
   document.querySelectorAll('[data-tab]').forEach(button=>{button.classList.toggle('active',button.dataset.tab===tab);button.setAttribute('aria-pressed',String(button.dataset.tab===tab))});
   document.querySelectorAll('.view').forEach(view=>view.hidden=view.id!==tab);
   $('#page-title').textContent=pages[tab].title;
+  if(tab!=='roteiro'){
+    const video=$('#piece-video');
+    if(video&&typeof video.pause==='function'&&!video.paused)video.pause();
+  }
+}
+
+function setupPieceVideo(){
+  const v=$('#piece-video'),rewind=$('#video-rewind'),restart=$('#video-restart'),forward=$('#video-forward');
+  if(rewind)rewind.onclick=()=>{if(v&&typeof v.currentTime==='number')v.currentTime=Math.max(0,v.currentTime-10)};
+  if(restart)restart.onclick=()=>{if(v&&typeof v.currentTime==='number'){v.currentTime=0;if(typeof v.play==='function')v.play()}};
+  if(forward)forward.onclick=()=>{if(v&&typeof v.currentTime==='number')v.currentTime=Math.min(v.duration||999999,v.currentTime+10)};
 }
 
 document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>changeTab(b.dataset.tab));
@@ -139,5 +150,5 @@ function retainPieceOnImport(imported){
   }
   return imported;
 }
-$('#export').onclick=()=>{const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}),a=document.createElement('a'),url=URL.createObjectURL(blob);a.href=url;a.download='bateria-absurda-'+new Date().toISOString().slice(0,10)+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('Peça exportada com formação, legendas e tutoriais')};$('#import').onclick=()=>$('#file').click();$('#file').onchange=async e=>{try{const file=e.target.files[0];if(!file)return;const s=JSON.parse(await file.text());if(!valid(s))throw Error();if(!confirm('Importar formação, breques e tutoriais deste arquivo? Exporte o planejamento atual antes, se quiser guardar uma cópia.'))return;migrateSavedState(s);state=retainPieceOnImport(s);save();render();toast('Planejamento importado.')}catch{toast('Arquivo inválido. Use uma peça exportada pelo site.')}finally{e.target.value=''}};$('#print').onclick=()=>window.print();setupTutorials();setupFormation();render();
+$('#export').onclick=()=>{const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}),a=document.createElement('a'),url=URL.createObjectURL(blob);a.href=url;a.download='bateria-absurda-'+new Date().toISOString().slice(0,10)+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('Peça exportada com formação, legendas e tutoriais')};$('#import').onclick=()=>$('#file').click();$('#file').onchange=async e=>{try{const file=e.target.files[0];if(!file)return;const s=JSON.parse(await file.text());if(!valid(s))throw Error();if(!confirm('Importar formação, breques e tutoriais deste arquivo? Exporte o planejamento atual antes, se quiser guardar uma cópia.'))return;migrateSavedState(s);state=retainPieceOnImport(s);save();render();toast('Planejamento importado.')}catch{toast('Arquivo inválido. Use uma peça exportada pelo site.')}finally{e.target.value=''}};$('#print').onclick=()=>window.print();setupPieceVideo();setupTutorials();setupFormation();render();
 
