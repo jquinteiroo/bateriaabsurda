@@ -4,7 +4,7 @@ Organizador editável para planejar a apresentação da bateria, com a identidad
 
 ## Recursos
 
-- Vídeo da apresentação da peça na tela inicial, com controles rápidos e reprodução responsiva.
+- Vídeo da apresentação da peça na tela inicial, com tutorial em overlay em tempo real (indicando o breque atual, sigla e instrução), navegação direta por trechos e reprodução responsiva.
 - Sequência inicial transcrita do rascunho.
 - Peça sem controles de edição. Trechos, ordem, duração, meta e caderno são definidos no código.
 - Barra com a sequência completa da peça, com siglas e numeração dos trechos. Em telas menores, a barra permite rolagem horizontal.

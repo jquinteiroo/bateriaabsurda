@@ -18,7 +18,7 @@
       </div>
       <div class="piece-video-badge" title="Duração da apresentação">08:20</div>
     </div>
-    <div class="piece-video-wrapper">
+    <div class="piece-video-wrapper" id="piece-video-wrapper">
       <video id="piece-video" controls preload="metadata" playsinline>
         <source src="assets/apresentacao.mp4" type="video/mp4">
         <source src="assets/Apresenta%C3%A7ao.mp4" type="video/mp4">
@@ -27,14 +27,44 @@
         <source src="../Apresentaçao.mp4" type="video/mp4">
         <p>Seu navegador não suporta a reprodução deste vídeo. Você pode <a href="assets/apresentacao.mp4" download>baixar o vídeo da apresentação (MP4)</a>.</p>
       </video>
+
+      <div class="video-overlay" id="video-overlay" aria-live="polite">
+        <div class="video-overlay-top">
+          <span class="video-overlay-live"><span class="pulse-dot"></span> TOCANDO AGORA</span>
+          <span class="video-overlay-step" id="overlay-step">TRECHO 01/21</span>
+          <span class="video-overlay-range" id="overlay-range">00:00 - 00:27</span>
+        </div>
+        <div class="video-overlay-body">
+          <span class="video-overlay-code" id="overlay-code">C</span>
+          <div class="video-overlay-info">
+            <strong class="video-overlay-name" id="overlay-name">Começo</strong>
+            <p class="video-overlay-hint" id="overlay-hint">Tan taran taran tan tan</p>
+          </div>
+        </div>
+        <div class="video-overlay-footer" id="overlay-next-wrap">
+          <span class="video-overlay-next-label">A seguir:</span>
+          <span class="video-overlay-next-text" id="overlay-next">Samba Reto (00:28)</span>
+        </div>
+      </div>
+
+      <button type="button" class="video-overlay-toggle-btn" id="overlay-toggle" aria-pressed="true" title="Mostrar ou ocultar o guia de breques na tela">
+        <span class="toggle-dot"></span> Guia de breques
+      </button>
     </div>
     <div class="piece-video-footer">
-      <p class="piece-video-note">Gravação em vídeo da apresentação da Bateria Absurda com a sequência de passagens e breques.</p>
+      <p class="piece-video-note">Gravação em vídeo da apresentação da Bateria Absurda com guia de breques em tempo real.</p>
       <div class="piece-video-actions">
         <button type="button" class="quiet" id="video-rewind" aria-label="Voltar 10 segundos">↺ -10s</button>
         <button type="button" class="quiet" id="video-restart" aria-label="Voltar ao início">⏮ Início</button>
         <button type="button" class="quiet" id="video-forward" aria-label="Avançar 10 segundos">↻ +10s</button>
       </div>
+    </div>
+    <div class="piece-video-chapters" aria-label="Navegar pelos breques da apresentação">
+      <div class="chapters-header">
+        <span class="eyebrow green">BREQUES NA APRESENTAÇÃO</span>
+        <small class="chapters-tip">Clique para pular direto ao breque no vídeo</small>
+      </div>
+      <div class="chapters-list" id="chapters-list" role="list"></div>
     </div>
   </div>
   <div class="sequence-strip"><h3>Sequência da peça</h3><ol id="piece-sequence" class="piece-sequence" tabindex="0" aria-label="Sequência completa da peça"></ol></div><div class="timeline" id="timeline"></div><div class="notes"><label for="notes">Caderno de ensaio <span>IDEIAS, ENTRADAS E COMBINADOS</span></label><textarea id="notes" readonly placeholder="Nenhuma anotação cadastrada."></textarea></div></section>

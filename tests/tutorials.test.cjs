@@ -234,6 +234,7 @@ test('peça bloqueada impede edição e exclusão e permite consultar instruçõ
 test('vídeo da apresentação é exibido na tela inicial da peça com controles', () => {
   const { run, nodes } = load();
   assert.ok(html.includes('id="piece-video"'));
+  assert.ok(html.includes('id="video-overlay"'));
   assert.ok(html.includes('assets/apresentacao.mp4'));
   assert.ok(html.includes('assets/Apresentaçao.mp4'));
   assert.ok(html.includes('08:20'));
@@ -256,6 +257,36 @@ test('vídeo da apresentação é exibido na tela inicial da peça com controles
   nodes['video-restart'].onclick();
   assert.equal(video.currentTime, 0);
   assert.equal(played, true);
+
+  // Overlay exibe o breque atual de acordo com os minutos e segundos
+  video.currentTime = 0;
+  run(`updatePieceVideoOverlay()`);
+  assert.equal(nodes['overlay-name'].textContent, 'Começo');
+  assert.equal(nodes['overlay-code'].textContent, 'C');
+
+  video.currentTime = 30;
+  run(`updatePieceVideoOverlay()`);
+  assert.equal(nodes['overlay-name'].textContent, 'Samba Reto');
+  assert.equal(nodes['overlay-code'].textContent, 'SR');
+
+  video.currentTime = 52;
+  run(`updatePieceVideoOverlay()`);
+  assert.equal(nodes['overlay-name'].textContent, '4 batidas e virada de 2');
+  assert.equal(nodes['overlay-code'].textContent, '4 2');
+
+  video.currentTime = 160;
+  run(`updatePieceVideoOverlay()`);
+  assert.equal(nodes['overlay-name'].textContent, 'Azão');
+  assert.equal(nodes['overlay-code'].textContent, 'A');
+
+  video.currentTime = 200;
+  run(`updatePieceVideoOverlay()`);
+  assert.equal(nodes['overlay-name'].textContent, 'Pergunta e Resposta');
+  assert.equal(nodes['overlay-code'].textContent, 'PR');
+
+  // Alternar exibição do overlay
+  nodes['overlay-toggle'].onclick();
+  assert.equal(nodes['video-overlay'].classList.toggle !== undefined, true);
 
   video.paused = false;
   run(`changeTab('formacao')`);

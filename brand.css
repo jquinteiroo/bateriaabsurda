@@ -121,6 +121,48 @@ dialog::backdrop { background: #0009; }
 .piece-video-badge { display: inline-flex; align-items: center; gap: 5px; background: #edf9e8; color: var(--green-dark); border: 1px solid #c5d5bb; border-radius: 3px; padding: 4px 10px; font: 800 16px/1 'Barlow Condensed', Impact, sans-serif; letter-spacing: .5px; }
 .piece-video-wrapper { position: relative; width: 100%; aspect-ratio: 16 / 9; background: var(--black); border: 1px solid var(--black); border-radius: 3px; overflow: hidden; box-shadow: 2px 2px 0 #111; }
 .piece-video-wrapper video { width: 100%; height: 100%; display: block; object-fit: contain; background: var(--black); }
+/* Overlay do tutorial no vídeo */
+.video-overlay { position: absolute; top: 12px; left: 12px; z-index: 4; background: rgba(11, 11, 11, 0.92); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.16); border-left: 4px solid var(--green); border-radius: 3px; padding: 9px 13px; max-width: min(88%, 390px); box-shadow: 0 4px 18px rgba(0, 0, 0, 0.6); color: #fff; pointer-events: none; transition: opacity .2s ease, transform .2s ease; }
+.video-overlay.is-hidden { opacity: 0; transform: translateY(-6px); }
+.video-overlay-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 5px; font-size: 9px; letter-spacing: 1px; font-weight: 700; flex-wrap: wrap; }
+.video-overlay-live { display: inline-flex; align-items: center; gap: 5px; color: var(--green); font-weight: 800; letter-spacing: 1.2px; font-size: 8.5px; }
+.pulse-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 6px var(--green); animation: pulse-glow 1.5s infinite ease-in-out; }
+@keyframes pulse-glow { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.35); opacity: .6; } }
+.video-overlay-step { color: #8fa385; font-size: 8.5px; }
+.video-overlay-range { color: #d0ded0; font-family: 'Barlow Condensed', Impact, sans-serif; font-size: 13px; font-weight: 700; }
+.video-overlay-body { display: flex; align-items: center; gap: 9px; }
+.video-overlay-code { display: flex; align-items: center; justify-content: center; min-width: 36px; height: 36px; padding: 0 5px; background: var(--green); color: var(--black); font: 900 19px/1 'Barlow Condensed', Impact, sans-serif; border-radius: 3px; flex-shrink: 0; }
+.video-overlay-info { min-width: 0; flex: 1; }
+.video-overlay-name { display: block; font: 800 21px/1.05 'Barlow Condensed', Impact, sans-serif; letter-spacing: -.2px; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.video-overlay-hint { margin: 2px 0 0; font-size: 10.5px; color: #ccd6c5; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.video-overlay-footer { display: flex; align-items: center; gap: 5px; margin-top: 6px; padding-top: 5px; border-top: 1px solid rgba(255, 255, 255, 0.12); font-size: 9.5px; }
+.video-overlay-next-label { color: #87947f; font-weight: 700; text-transform: uppercase; font-size: 8.5px; letter-spacing: .5px; }
+.video-overlay-next-text { color: var(--green); font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.video-overlay-toggle-btn { position: absolute; top: 12px; right: 12px; z-index: 5; background: rgba(11, 11, 11, 0.8); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); border: 1px solid rgba(255, 255, 255, 0.22); border-radius: 3px; color: #e5ece0; font-size: 10px; font-weight: 700; padding: 5px 9px; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; transition: background .15s, border-color .15s, color .15s; }
+.video-overlay-toggle-btn:hover { background: rgba(11, 11, 11, 0.95); border-color: var(--green); color: var(--green); }
+.video-overlay-toggle-btn .toggle-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+.video-overlay-toggle-btn.is-off { color: #868c81; border-color: rgba(255, 255, 255, 0.12); }
+.video-overlay-toggle-btn.is-off .toggle-dot { background: #666; }
+/* Navegação pelos breques no vídeo */
+.piece-video-chapters { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); }
+.chapters-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 9px; }
+.chapters-tip { font-size: 11px; color: var(--muted); }
+.chapters-list { display: flex; gap: 8px; overflow-x: auto; overscroll-behavior-x: contain; padding-bottom: 8px; scrollbar-color: #90ad7e #e1ebda; }
+.chapter-pill { flex: 0 0 auto; display: inline-flex; align-items: center; gap: 6px; background: #f6faf2; border: 1px solid #c9d5c1; border-radius: 3px; padding: 6px 10px; font-size: 11px; font-weight: 700; color: var(--ink); cursor: pointer; transition: all .15s ease; }
+.chapter-pill:hover { background: #edf7e7; border-color: var(--green-dark); color: var(--green-dark); }
+.chapter-pill.active { background: var(--black); border-color: var(--black); color: var(--green); box-shadow: 2px 2px 0 var(--green); }
+.chapter-pill-time { font-family: 'Barlow Condensed', Impact, sans-serif; font-size: 13px; color: var(--green-dark); }
+.chapter-pill.active .chapter-pill-time { color: var(--green); }
+.chapter-pill-code { display: inline-block; padding: 1px 4px; background: #e1edd8; border-radius: 2px; font-size: 10px; color: var(--green-dark); }
+.chapter-pill.active .chapter-pill-code { background: var(--green); color: var(--black); }
+/* Suporte a fullscreen nativo da área do vídeo */
+.piece-video-wrapper:fullscreen { width: 100vw; height: 100vh; display: flex; align-items: center; justify-content: center; background: #000; border: 0; border-radius: 0; }
+.piece-video-wrapper:fullscreen video { width: 100%; height: 100%; max-height: 100vh; object-fit: contain; }
+.piece-video-wrapper:fullscreen .video-overlay { top: 22px; left: 22px; max-width: 480px; padding: 12px 16px; }
+.piece-video-wrapper:fullscreen .video-overlay-name { font-size: 26px; }
+.piece-video-wrapper:fullscreen .video-overlay-hint { font-size: 13px; }
+.piece-video-wrapper:fullscreen .video-overlay-code { min-width: 42px; height: 42px; font-size: 23px; }
+.piece-video-wrapper:fullscreen .video-overlay-toggle-btn { top: 22px; right: 22px; font-size: 12px; padding: 7px 12px; }
 .piece-video-footer { margin-top: 14px; display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; }
 .piece-video-note { margin: 0; font-size: 12px; color: var(--muted); line-height: 1.5; flex: 1 1 260px; }
 .piece-video-actions { display: flex; gap: 8px; align-items: center; }
@@ -132,6 +174,12 @@ dialog::backdrop { background: #0009; }
   .piece-video-footer { flex-direction: column; align-items: flex-start; gap: 10px; }
   .piece-video-actions { width: 100%; }
   .piece-video-actions button { flex: 1; text-align: center; padding: 8px; font-size: 10px; }
+  .video-overlay { top: 8px; left: 8px; right: 8px; max-width: none; padding: 7px 9px; }
+  .video-overlay-name { font-size: 17px; }
+  .video-overlay-hint { font-size: 10px; }
+  .video-overlay-code { min-width: 30px; height: 30px; font-size: 15px; }
+  .video-overlay-toggle-btn { top: 8px; right: 8px; font-size: 9px; padding: 3px 6px; }
+  .chapters-tip { display: none; }
 }
 @media print { .piece-sequence { flex-wrap: wrap; overflow: visible; } .sequence-step { flex: 0 0 40px; } .sequence-strip { break-inside: avoid; } .piece-video-card { display: none !important; } }
 .piece-block:hover { transform: none; box-shadow: none; border-color: #d6d8d2; }

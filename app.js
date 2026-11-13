@@ -123,11 +123,95 @@ function changeTab(tab){
   }
 }
 
+const pieceVideoChapters=[
+  {start:0,end:27,code:'C',name:'Começo',hint:'Tan taran taran tan tan'},
+  {start:28,end:49,code:'SR',name:'Samba Reto',hint:'Samba Reto contínuo · Base rítmica'},
+  {start:50,end:54,code:'4 2',name:'4 batidas e virada de 2',hint:'4 batidas e Virada de Dois'},
+  {start:54,end:76,code:'SR',name:'Samba Reto',hint:'Samba Reto contínuo'},
+  {start:77,end:91,code:'M',name:'Mosquito 1º Parte',hint:'Mosquito · Primeira parte da convenção'},
+  {start:92,end:105,code:'M',name:'Mosquito 2º Parte',hint:'Mosquito · Segunda parte da convenção'},
+  {start:106,end:133,code:'SR',name:'Samba Reto',hint:'Samba Reto contínuo'},
+  {start:134,end:138,code:'4 2',name:'4 batidas e virada de 2',hint:'4 batidas e Virada de Dois'},
+  {start:139,end:152,code:'SR',name:'Samba Reto',hint:'Samba Reto contínuo'},
+  {start:153,end:158,code:'8 6',name:'8 batidas com 3 Viradas',hint:'8 batidas e 3 Viradas de Dois'},
+  {start:158,end:192,code:'A',name:'Azão',hint:'4 batidas, 8 rápidas e 3 Viradas de Dois. Repetir 2x; no intervalo: “Absurda!”'},
+  {start:192,end:243,code:'PR',name:'Pergunta e Resposta',hint:'Pergunta e Resposta · 4 batidas da Ripa e Virada de Dois de todos'},
+  {start:244,end:272,code:'SR',name:'Samba Reto',hint:'Samba Reto contínuo'},
+  {start:272,end:282,code:'A',name:'Azão',hint:'4 batidas, 8 rápidas e 3 Viradas de Dois · Gritar “Absurda!”'},
+  {start:283,end:328,code:'PR',name:'Pergunta e Resposta',hint:'Pergunta e Resposta · Ripa + Virada de Dois de todos'},
+  {start:328,end:380,code:'SR',name:'Samba Reto',hint:'Samba Reto contínuo'},
+  {start:381,end:391,code:'A',name:'Azão',hint:'4 batidas, 8 rápidas e 3 Viradas de Dois · Gritar “Absurda!”'},
+  {start:392,end:443,code:'PR',name:'Pergunta e Resposta',hint:'Pergunta e Resposta · Ripa + Virada de Dois de todos'},
+  {start:444,end:471,code:'SR',name:'Samba Reto',hint:'Samba Reto contínuo'},
+  {start:471,end:482,code:'A',name:'Azão',hint:'4 batidas, 8 rápidas e 3 Viradas de Dois · Gritar “Absurda!”'},
+  {start:482,end:500,code:'FIM',name:'Encerramento',hint:'Final da apresentação da Bateria Absurda'}
+];
+
+function padTime(n){return `${String(Math.floor(n/60)).padStart(2,'0')}:${String(Math.floor(n%60)).padStart(2,'0')}`}
+
+function getCurrentPieceChapter(time){
+  const t=Math.max(0,time);
+  for(let i=pieceVideoChapters.length-1;i>=0;i--){
+    if(t>=pieceVideoChapters[i].start){
+      return {chapter:pieceVideoChapters[i],index:i,next:pieceVideoChapters[i+1]||null};
+    }
+  }
+  return {chapter:pieceVideoChapters[0],index:0,next:pieceVideoChapters[1]||null};
+}
+
+function updatePieceVideoOverlay(){
+  const v=$('#piece-video');
+  const currentTime=(v&&typeof v.currentTime==='number')?v.currentTime:0;
+  const {chapter,index,next}=getCurrentPieceChapter(currentTime);
+  const codeEl=$('#overlay-code'),nameEl=$('#overlay-name'),hintEl=$('#overlay-hint'),rangeEl=$('#overlay-range'),nextEl=$('#overlay-next'),stepEl=$('#overlay-step');
+  if(codeEl)codeEl.textContent=chapter.code;
+  if(nameEl)nameEl.textContent=chapter.name;
+  if(hintEl)hintEl.textContent=chapter.hint;
+  if(rangeEl)rangeEl.textContent=`${padTime(chapter.start)} - ${padTime(chapter.end)}`;
+  if(stepEl)stepEl.textContent=`TRECHO ${String(index+1).padStart(2,'0')}/${String(pieceVideoChapters.length).padStart(2,'0')}`;
+  if(nextEl)nextEl.textContent=next?`${next.name} (${padTime(next.start)})`:'Fim da apresentação';
+  const pills=document.querySelectorAll('.chapter-pill');
+  if(pills&&pills.length){
+    pills.forEach((p,i)=>p.classList.toggle('active',i===index));
+  }
+}
+
 function setupPieceVideo(){
-  const v=$('#piece-video'),rewind=$('#video-rewind'),restart=$('#video-restart'),forward=$('#video-forward');
-  if(rewind)rewind.onclick=()=>{if(v&&typeof v.currentTime==='number')v.currentTime=Math.max(0,v.currentTime-10)};
-  if(restart)restart.onclick=()=>{if(v&&typeof v.currentTime==='number'){v.currentTime=0;if(typeof v.play==='function')v.play()}};
-  if(forward)forward.onclick=()=>{if(v&&typeof v.currentTime==='number')v.currentTime=Math.min(v.duration||999999,v.currentTime+10)};
+  const v=$('#piece-video'),rewind=$('#video-rewind'),restart=$('#video-restart'),forward=$('#video-forward'),toggle=$('#overlay-toggle'),overlay=$('#video-overlay'),chaptersList=$('#chapters-list');
+  if(rewind)rewind.onclick=()=>{if(v&&typeof v.currentTime==='number'){v.currentTime=Math.max(0,v.currentTime-10);updatePieceVideoOverlay()}};
+  if(restart)restart.onclick=()=>{if(v&&typeof v.currentTime==='number'){v.currentTime=0;if(typeof v.play==='function')v.play();updatePieceVideoOverlay()}};
+  if(forward)forward.onclick=()=>{if(v&&typeof v.currentTime==='number'){v.currentTime=Math.min(v.duration||999999,v.currentTime+10);updatePieceVideoOverlay()}};
+
+  let overlayVisible=true;
+  if(toggle){
+    toggle.onclick=()=>{
+      overlayVisible=!overlayVisible;
+      if(overlay)overlay.classList.toggle('is-hidden',!overlayVisible);
+      toggle.classList.toggle('is-off',!overlayVisible);
+      toggle.setAttribute('aria-pressed',String(overlayVisible));
+    };
+  }
+
+  if(v){
+    v.ontimeupdate=()=>updatePieceVideoOverlay();
+    v.onseeked=()=>updatePieceVideoOverlay();
+  }
+
+  if(chaptersList){
+    chaptersList.innerHTML=pieceVideoChapters.map((c,i)=>`<button type="button" class="chapter-pill ${i===0?'active':''}" data-start="${c.start}" title="${esc(c.name)} (${padTime(c.start)} - ${padTime(c.end)})"><span class="chapter-pill-time">${padTime(c.start)}</span><span class="chapter-pill-code">${esc(c.code)}</span><span>${esc(c.name)}</span></button>`).join('');
+    chaptersList.onclick=e=>{
+      const btn=e.target.closest('.chapter-pill');
+      if(!btn)return;
+      const start=Number(btn.dataset.start);
+      if(Number.isFinite(start)&&v&&typeof v.currentTime==='number'){
+        v.currentTime=start;
+        if(typeof v.play==='function')v.play();
+        updatePieceVideoOverlay();
+      }
+    };
+  }
+
+  updatePieceVideoOverlay();
 }
 
 document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>changeTab(b.dataset.tab));
