@@ -1,8 +1,8 @@
 const $=s=>document.querySelector(s),uid=()=>crypto.randomUUID(),key='na-marcacao-v1';
 const formationRoster=[
-  ['bru','Bru','Surdo de Primeira',30,12],
-  ['lg','LG','Surdo de Terceira',50,12],
-  ['bre','Bre','Surdo de Primeira',70,12],
+  ['bru','Bruna','Surdo de Primeira',30,12],
+  ['lg','Luis','Surdo de Terceira',50,12],
+  ['bre','Brenda','Surdo de Primeira',70,12],
   ['beck','Beck','Caixa',32,27],
   ['julia','Julia','Caixa',50,27],
   ['g-ou-t','G ou T','Caixa',68,27],
@@ -40,10 +40,22 @@ function migrateBreaks(s){
 }
 function migrateSavedState(s){
   const formationChanged=migrateFormation(s);
+  const namesChanged=migrateFormationNames(s);
   const layoutsChanged=migrateFormationLayouts(s);
   const breaksChanged=migrateBreaks(s);
   const tutorialsChanged=migrateTutorials(s);
-  return formationChanged||layoutsChanged||breaksChanged||tutorialsChanged;
+  return formationChanged||namesChanged||layoutsChanged||breaksChanged||tutorialsChanged;
+}
+function migrateFormationNames(s){
+  const names={bre:'Brenda',bree:'Brenda',bu:'Bruna',bru:'Bruna',lg:'Luis'};
+  let changed=false;
+  for(const person of s.people){
+    const name=names[person.name.trim().toLowerCase()];
+    if(typeof name!=='string')continue;
+    person.name=name;
+    changed=true;
+  }
+  return changed;
 }
 const initial={version:1,formationRevision:1,libraryRevision:1,tutorialRevision:2,tutorials:structuredClone(defaultTutorials),target:7,notes:'',library:[...breakDefinitions.map(item=>({...item})),{id:'FIM',code:'FIM',name:'Fim',notes:''}],sequence:['C','SR','2','SR','42','SR','M','SR','42','SR','86','A','PR','SR','A','FIM'].map(code=>({id:uid(),ref:code,seconds:0,notes:''})),people:formationRoster.map(([slot,name,notes,x,y])=>({id:uid(),slot,name,notes,x,y}))};
 migrateFormationLayouts(initial);
